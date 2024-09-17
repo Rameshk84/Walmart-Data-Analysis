@@ -1,0 +1,144 @@
+  -- ------------------------------------PRODUCTS QUESTIONS
+  -- ---------------------------------------------------------------------------------------------------------
+  -- Q1 - How many unique product lines does the data have?
+SELECT COUNT(DISTINCT product_line) FROM wallmartsales_data;
+
+  -- Q2 - What is the most common payment method?
+  SELECT payment, COUNT(payment) FROM wallmartsales_data
+  GROUP BY payment 
+  ORDER BY COUNT(payment) DESC;
+
+  -- Q3 - What is the most selling product line?
+  SELECT SUM(quantity),product_line FROM wallmartsales_data
+  GROUP BY product_line
+  ORDER BY SUM(quantity) DESC;
+
+  -- Q4 - What is the total revenue by month?
+  SELECT month_name AS month,
+  SUM(total) AS total_revenue FROM wallmartsales_data
+  GROUP BY month_name 
+  ORDER BY total_revenue;
+
+  -- Q5 - What month had the largest COGS?
+  SELECT month_name AS month,
+  SUM(cogs) AS cogs FROM wallmartsales_data
+  GROUP BY month_name 
+  ORDER BY cogs;
+
+  -- Q6 - What product line had the largest revenue?
+  SELECT product_line,
+  SUM(total) as total_revenue FROM wallmartsales_data
+  GROUP BY product_line
+  ORDER BY total_revenue DESC;
+
+  -- Q7 - What is the city with the largest revenue?
+  SELECT branch,city,
+  SUM(total) AS total_revenue FROM wallmartsales_data
+  GROUP BY city, branch 
+  ORDER BY total_revenue;
+
+  -- Q8 - What product line had the largest VAT?
+  SELECT product_line,
+  AVG(tax_pct) as avg_tax FROM wallmartsales_data
+  GROUP BY product_line
+  ORDER BY avg_tax DESC; 
+
+  -- Q9 - Which branch sold more products than average product sold?
+  SELECT product_line,
+  CASE
+  WHEN AVG(quantity) > 6 THEN "Good"
+  ELSE "Bad"
+  END AS remark
+  FROM sales
+  GROUP BY product_line;
+
+  -- Q10 - What is the most common product line by gender?
+  SELECT gender,product_line,
+  COUNT(gender) AS total_cnt FROM wallmartsales_data
+  GROUP BY gender, product_line
+  ORDER BY total_cnt DESC;
+
+  -- Q11 - What is the average rating of each product line?
+  SELECT 
+  ROUND(AVG(rating), 2) as avg_rating,product_line 
+  FROM wallmartsales_data
+  GROUP BY product_line
+  ORDER BY avg_rating DESC;
+  -- ---------------------------------------------------------------------------------------------------------
+
+  -- ------------------------------------SALES QUESTIONS 
+  -- Q1 - Number of sales made in each time of the day per weekday?
+  SELECT time_of_day,COUNT(*) AS total_sales FROM wallmartsales_data
+  WHERE day_name = "Sunday"
+  GROUP BY time_of_day 
+  ORDER BY total_sales DESC;
+
+  -- Q2 - Which of the customer types brings the most revenue?
+  SELECT customer_type, SUM(total) AS total_revenue FROM wallmartsales_data
+  GROUP BY customer_type
+  ORDER BY total_revenue;
+
+  -- Q3 - Which city has the largest tax/VAT percent?
+  SELECT city, 
+  ROUND(AVG(tax_pct), 2) AS avg_tax_pct FROM wallmartsales_data
+  GROUP BY city 
+  ORDER BY avg_tax_pct DESC;
+
+  -- Q4 - Which customer type pays the most in VAT?
+  SELECT customer_type, 
+  AVG(tax_pct) AS total_tax FROM sales
+  GROUP BY customer_type
+  ORDER BY total_tax;
+  -- ---------------------------------------------------------------------------------------------------------
+
+  -- ------------------------------------CUSTOMERS QUESTIONS
+  -- ---------------------------------------------------------------------------------------------------------
+  -- Q1 - How many unique customer types does the data have?
+  SELECT DISTINCT customer_type FROM wallmartsales_data;
+
+  -- Q2 - How many unique payment methods does the data have?
+  SELECT DISTINCT payment FROM wallmartsales_data;
+
+  -- Q3 - What is the most common customer type?
+  SELECT customer_type, 
+  count(*) as count FROM sales
+  GROUP BY customer_type
+  ORDER BY count DESC;
+
+  -- Q4 - Which customer type buys the most?
+  SELECT customer_type, COUNT(*) FROM wallmartsales_data
+  GROUP BY customer_type;
+
+  -- Q5 - What is the gender of most of the customers?
+  SELECT gender,COUNT(*) as gender_cnt FROM wallmartsales_data
+  GROUP BY gender
+  ORDER BY gender_cnt DESC;
+
+  -- Q6 - What is the gender distribution per branch?
+  SELECT gender, COUNT(*) as gender_cnt FROM wallmartsales_data
+  WHERE branch = "C"
+  GROUP BY gender
+  ORDER BY gender_cnt DESC;
+
+  -- Q7 - Which time of the day do customers give most ratings?
+  SELECT time_of_day, AVG(rating) AS avg_rating FROM wallmartsales_data
+  GROUP BY time_of_day
+  ORDER BY avg_rating DESC;
+
+  -- Q8 - Which time of the day do customers give most ratings per branch?
+  SELECT time_of_day, AVG(rating) AS avg_rating FROM wallmartsales_data
+  WHERE branch = "A"
+  GROUP BY time_of_day
+  ORDER BY avg_rating DESC;
+
+  -- Q9 - Which day of the week has the best avg ratings?
+  SELECT day_name,AVG(rating) AS avg_rating FROM wallmartsales_data
+  GROUP BY day_name 
+  ORDER BY avg_rating DESC;
+
+  -- Q10 - Which day of the week has the best average ratings per branch?
+  SELECT day_name,COUNT(day_name) total_sales FROM wallmartsales_data
+  WHERE branch = "C"
+  GROUP BY day_name
+  ORDER BY total_sales DESC;
+  -- ---------------------------------------------------------------------------------------------------------
